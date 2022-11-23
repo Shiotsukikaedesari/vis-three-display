@@ -191,6 +191,8 @@ objLoader.loadAsync("/vis.obj").then((group) => {
 
 const clock = new Clock();
 
+let timer = "";
+
 const renderFun = () => {
   orbitControls.update();
 
@@ -201,7 +203,7 @@ const renderFun = () => {
   threeObj && (threeObj.rotation.z += delta * 0.2);
   visObj && (visObj.rotation.y += delta * 0.7);
 
-  requestAnimationFrame(renderFun);
+  timer = requestAnimationFrame(renderFun);
 };
 
 window.onload = () => {
@@ -210,6 +212,20 @@ window.onload = () => {
   renderer.setSize(dom.offsetWidth, dom.offsetHeight, true);
   camera.aspect = dom.offsetWidth / dom.offsetHeight;
   camera.updateProjectionMatrix();
+
+  document.getElementById("save").onclick = () => {
+    cancelAnimationFrame(timer);
+    const blob = new Blob([JSON.stringify(scene.toJSON())], {
+      type: "text/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+
+    a.download = "three.json";
+    a.click();
+    renderFun();
+  };
 };
 
 renderFun();

@@ -173,4 +173,16 @@ engine
 window.onload = () => {
   const dom = document.getElementById("app");
   engine.setDom(dom).setSize().play();
+
+  document.getElementById("save").onclick = () => {
+    const blob = new Blob([engine.toJSON()], {
+      type: "text/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+
+    a.download = "vis.json";
+    a.click();
+  };
 };
